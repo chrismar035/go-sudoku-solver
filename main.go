@@ -1,85 +1,54 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"strconv"
 	"sync"
 )
 
-type Row [9]int
-type Rows [9]Row
-
-type Puzzle struct {
-	Initial  Rows
-	Solution Rows
-}
-
-type WorkingRow [9]Square
-type Working [9]WorkingRow
-type WorkingSet struct {
-	Square Square
-	Row    int
-	Column int
-}
-
-type Square struct {
-	Candidates [9]bool
-	Value      int
-}
-
 func main() {
-	puzzle := Puzzle{Initial: Rows{
-		Row{0, 1, 0, 0, 0, 6, 5, 2, 7},
-		Row{7, 8, 0, 1, 4, 5, 0, 0, 9},
-		Row{0, 0, 0, 0, 2, 0, 0, 1, 0},
+	puzzle := Puzzle{Initial: [81]int{0, 1, 0, 0, 0, 6, 5, 2, 7,
+		7, 8, 0, 1, 4, 5, 0, 0, 9,
+		0, 0, 0, 0, 2, 0, 0, 1, 0,
 
-		Row{0, 0, 5, 0, 0, 0, 7, 4, 6},
-		Row{0, 0, 0, 9, 0, 7, 0, 0, 0},
-		Row{6, 7, 1, 0, 0, 0, 9, 0, 0},
+		0, 0, 5, 0, 0, 0, 7, 4, 6,
+		0, 0, 0, 9, 0, 7, 0, 0, 0,
+		6, 7, 1, 0, 0, 0, 9, 0, 0,
 
-		Row{0, 3, 0, 0, 9, 0, 0, 0, 0},
-		Row{9, 0, 0, 4, 8, 3, 0, 6, 5},
-		Row{1, 6, 8, 5, 0, 0, 0, 9, 0}},
-
-		Solution: Rows{
-			Row{0, 1, 0, 0, 0, 6, 5, 2, 7},
-			Row{7, 8, 0, 1, 4, 5, 0, 0, 9},
-			Row{0, 0, 0, 0, 2, 0, 0, 1, 0},
-
-			Row{0, 0, 5, 0, 0, 0, 7, 4, 6},
-			Row{0, 0, 0, 9, 0, 7, 0, 0, 0},
-			Row{6, 7, 1, 0, 0, 0, 9, 0, 0},
-
-			Row{0, 3, 0, 0, 9, 0, 0, 0, 0},
-			Row{9, 0, 0, 4, 8, 3, 0, 6, 5},
-			Row{1, 6, 8, 5, 0, 0, 0, 9, 0}}}
+		0, 3, 0, 0, 9, 0, 0, 0, 0,
+		9, 0, 0, 4, 8, 3, 0, 6, 5,
+		1, 6, 8, 5, 0, 0, 0, 9, 0}}
 
 	var wg sync.WaitGroup
 	working := WorkingFromPuzzle(puzzle)
 	newSets := make(chan WorkingSet)
-	processSquare := func(r, c int) {
+	processSquare := func(i int) {
 		defer wg.Done()
-		square := working[r][c]
+		square := working[i]
 
 		// fmt.Println("Processing on:", r, "-", c)
 		// mark same row as non-candidates
-		for _, neighbor := range working[r] {
+		for _, index := range indicesForRow(i) {
+			neighbor := working[index]
 			if neighbor.Value != 0 {
 				square.Candidates[neighbor.Value-1] = false
 			}
 		}
 
 		// mark same column as non-candidates
-		for _, row := range working {
-			neighbor := row[c]
+		for _, index := range indicesForColumn(i) {
+			neighbor := working[index]
 			if neighbor.Value != 0 {
 				square.Candidates[neighbor.Value-1] = false
 			}
 		}
 
 		// mark same sub-square as non-candidates
-		// TODO
+		for _, index := range indicesForSub(i) {
+			neighbor := working[index]
+			if neighbor.Value != 0 {
+				square.Candidates[neighbor.Value-1] = false
+			}
+		}
 
 		var candidate int
 		candidateCount := 0
@@ -93,14 +62,12 @@ func main() {
 			square.Value = candidate + 1
 		}
 
-		newSets <- WorkingSet{Square: square, Row: r, Column: c}
+		newSets <- WorkingSet{Square: square, Index: i}
 	}
-	for i, workingRow := range working {
-		for ii, square := range workingRow {
-			if square.Value == 0 {
-				wg.Add(1)
-				go processSquare(i, ii)
-			}
+	for i, square := range working {
+		if square.Value == 0 {
+			wg.Add(1)
+			go processSquare(i)
 		}
 	}
 
@@ -110,22 +77,31 @@ func main() {
 	}()
 
 	for newSet := range newSets {
-		row := newSet.Row
-		column := newSet.Column
+		index := newSet.Index
+		row := index / 9
+		column := index % 9
 		square := newSet.Square
 		// fmt.Println("Received:", row, "-", column, square)
 		//fmt.Println("Comparing:", working[column][row].Value, square.Value)
-		if working[row][column].Value != square.Value {
+		if working[index].Value != square.Value {
 			fmt.Println("Got value at", row, "-", column, "of", square.Value)
-			working[row][column] = square
-			for i := 0; i < 9; i++ {
-				if i != row && working[row][i].Value == 0 {
+			working[index] = square
+			for _, index := range indicesForRow(index) {
+				if working[index].Value == 0 {
 					wg.Add(1)
-					go processSquare(row, i)
+					go processSquare(index)
 				}
-				if i != column && working[i][column].Value == 0 {
+			}
+			for _, index := range indicesForColumn(index) {
+				if working[index].Value == 0 {
 					wg.Add(1)
-					go processSquare(i, column)
+					go processSquare(index)
+				}
+			}
+			for _, index := range indicesForSub(index) {
+				if working[index].Value == 0 {
+					wg.Add(1)
+					go processSquare(index)
 				}
 			}
 		}
@@ -138,65 +114,45 @@ func main() {
 	fmt.Println(PuzzleFromWorking(working))
 }
 
-func (p Puzzle) String() string {
-	var buffer bytes.Buffer
-	for i, row := range p.Initial {
-		if i != 0 && i%3 == 0 {
-			buffer.WriteString("\n")
-		}
-		buffer.WriteString(row.String())
-		buffer.WriteString("\n")
-	}
-	return buffer.String()
-}
-
-func (r Row) String() string {
-	var buffer bytes.Buffer
-	for i, value := range r {
-		if i != 0 && i%3 == 0 {
-			buffer.WriteString(" ")
-		}
-		if value == 0 {
-			buffer.WriteString("_")
-		} else {
-			buffer.WriteString(strconv.Itoa(value))
+func indicesForRow(raw_index int) [8]int {
+	row := raw_index / 9
+	var indices [8]int
+	for i := 0; i < 8; i++ {
+		index := 9*row + i
+		if index != raw_index {
+			indices[i] = index
 		}
 	}
-	return buffer.String()
+	return indices
 }
 
-func NewSquare(value int) Square {
-	return Square{Candidates: [9]bool{
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true,
-		true},
-		Value: value}
-}
-
-func WorkingFromPuzzle(p Puzzle) Working {
-	var working Working
-	for i, rows := range p.Initial {
-		for ii, value := range rows {
-			working[i][ii] = NewSquare(value)
+func indicesForColumn(raw_index int) [8]int {
+	column := raw_index % 9
+	var indices [8]int
+	for i := 0; i < 8; i++ {
+		index := i*9 + column
+		if index != raw_index {
+			indices[i] = index
 		}
 	}
-	return working
+	return indices
 }
 
-func PuzzleFromWorking(working Working) Puzzle {
-	var puzzle Puzzle
-	for i, rows := range working {
-		var row Row
-		for ii, square := range rows {
-			row[ii] = square.Value
+func indicesForSub(raw_index int) [8]int {
+	row := raw_index / 9
+	column := raw_index % 9
+	base_indices := [9]int{0, 1, 2, 9, 10, 11, 18, 19, 20}
+
+	var indices [8]int
+	current_index := 0
+	for i := 0; current_index < 8; i++ {
+		value := base_indices[i]
+		candidate := value + column + (3 * row)
+		if candidate != raw_index {
+			indices[current_index] = candidate
+			current_index++
 		}
-		puzzle.Initial[i] = row
 	}
-	return puzzle
+
+	return indices
 }
