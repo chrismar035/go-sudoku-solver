@@ -10,6 +10,15 @@ type Puzzle struct {
 	Solution [81]int
 }
 
+func (p Puzzle) Solved() bool {
+	for _, value := range p.Solution {
+		if value == 0 {
+			return false
+		}
+	}
+	return true
+}
+
 func (p Puzzle) String() string {
 	var buffer bytes.Buffer
 	buffer.WriteString("Puzzle\n")

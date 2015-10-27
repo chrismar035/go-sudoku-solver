@@ -1,12 +1,12 @@
 package solver
 
-type Square struct {
+type square struct {
 	Candidates [9]bool
 	Value      int
 }
 
-func NewSquare(value int) Square {
-	return Square{Candidates: [9]bool{
+func newSquare(value int) square {
+	return square{Candidates: [9]bool{
 		true,
 		true,
 		true,

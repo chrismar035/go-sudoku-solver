@@ -1,8 +1,8 @@
 package solver
 
-type Working [81]Square
-type WorkingSet struct {
-	Square Square
+type working [81]square
+type workingSet struct {
+	Square square
 	Index  int
 }
 
