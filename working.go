@@ -1,4 +1,4 @@
-package main
+package solver
 
 type Working [81]Square
 type WorkingSet struct {

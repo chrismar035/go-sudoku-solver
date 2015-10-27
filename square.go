@@ -1,4 +1,4 @@
-package main
+package solver
 
 type Square struct {
 	Candidates [9]bool
