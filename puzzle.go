@@ -12,7 +12,16 @@ type Puzzle struct {
 
 func (p Puzzle) String() string {
 	var buffer bytes.Buffer
-	for i, value := range p.Initial {
+	buffer.WriteString("Puzzle\n")
+	buffer.WriteString(printInts(p.Initial))
+	buffer.WriteString("\n\nSolution\n")
+	buffer.WriteString(printInts(p.Solution))
+	return buffer.String()
+}
+
+func printInts(ints [81]int) string {
+	var buffer bytes.Buffer
+	for i, value := range ints {
 		if i != 0 && i%9 == 0 {
 			buffer.WriteString("\n")
 		} else if i != 0 && i%3 == 0 {
