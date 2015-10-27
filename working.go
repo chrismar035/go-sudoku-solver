@@ -1,6 +1,6 @@
 package solver
 
-import "github.com/chrismar035/grid"
+import "github.com/chrismar035/solver/grid"
 
 type working [81]square
 type workingSet struct {
