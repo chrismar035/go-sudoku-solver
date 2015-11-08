@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/chrismar035/solver"
+	"github.com/chrismar035/solver/backtracker"
 )
 
 func main() {
@@ -16,9 +17,9 @@ func main() {
 		fmt.Println("Error opening puzzles", err)
 	}
 	scanner := bufio.NewScanner(file)
-	line := 0
+	lineNumber := 0
 	for scanner.Scan() {
-		line++
+		lineNumber++
 		line := scanner.Text()
 		if len(line) != 81 {
 			fmt.Println("Puzzle improperly sized on line", line, err)
@@ -28,12 +29,14 @@ func main() {
 		for i, char := range strings.Split(line, "") {
 			puzzle[i], err = strconv.Atoi(char)
 			if err != nil {
-				fmt.Println("Invalid puzzle line", line, "char", i)
+				fmt.Println("Invalid puzzle line", lineNumber, "char", i)
 			}
 		}
-		finished := solver.NewPuzzle(puzzle)
+
+		finished := solver.Puzzle{Initial: puzzle, Solution: backtracker.Solve(puzzle)}
 		fmt.Println(finished)
-		fmt.Println(finished.Solved())
+		finished = solver.NewPuzzle(puzzle)
+		fmt.Println(finished)
 	}
 
 	// var candidate [81]int
