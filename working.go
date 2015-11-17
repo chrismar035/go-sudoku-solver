@@ -11,11 +11,18 @@ type workingSet struct {
 func processSquare(i int, working working) working {
 	square := working[i]
 
-	square.checkIndices(grid.IndicesForRow(i), working)
-	square.checkIndices(grid.IndicesForColumn(i), working)
-	square.checkIndices(grid.IndicesForSub(i), working)
-
+	square.checkValues(grid.IndicesForRow(i), working)
 	square.tryToSetValueFromCandidates()
+
+	if square.Value == 0 {
+		square.checkValues(grid.IndicesForColumn(i), working)
+		square.tryToSetValueFromCandidates()
+	}
+
+	if square.Value == 0 {
+		square.checkValues(grid.IndicesForSub(i), working)
+		square.tryToSetValueFromCandidates()
+	}
 
 	if working[i].Value != square.Value {
 		working[i] = square

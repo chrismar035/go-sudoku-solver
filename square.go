@@ -19,7 +19,7 @@ func newSquare(value int) square {
 		Value: value}
 }
 
-func (square *square) checkIndices(indices [8]int, working working) {
+func (square *square) checkValues(indices [8]int, working working) {
 	for _, index := range indices {
 		neighbor := working[index]
 		if neighbor.Value != 0 {
