@@ -10,7 +10,7 @@ type Puzzle struct {
 	Solution Grid
 }
 
-func (p Puzzle) Solved() bool {
+func (p Puzzle) IsSolved() bool {
 	for _, value := range p.Solution {
 		if value == 0 {
 			return false
