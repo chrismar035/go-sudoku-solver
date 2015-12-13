@@ -45,19 +45,12 @@ func processSquare(i int, working working) working {
 	return working
 }
 
-func workingFromArray(p [81]int) working {
+func workingFromGrid(p Grid) working {
 	var working working
 	for i, value := range p {
 		working[i] = newSquare(value)
 	}
 	return working
-}
-
-func (w working) toArray() (array [81]int) {
-	for i, square := range w {
-		array[i] = square.Value
-	}
-	return
 }
 
 func (w working) blankCount() int {
@@ -68,4 +61,11 @@ func (w working) blankCount() int {
 		}
 	}
 	return count
+}
+
+func (w working) ToGrid() (grid Grid) {
+	for i, square := range w {
+		grid[i] = square.Value
+	}
+	return
 }

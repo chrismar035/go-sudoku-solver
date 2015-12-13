@@ -6,8 +6,8 @@ import (
 )
 
 type Puzzle struct {
-	Initial  [81]int
-	Solution [81]int
+	Initial  Grid
+	Solution Grid
 }
 
 func (p Puzzle) Solved() bool {
@@ -28,7 +28,7 @@ func (p Puzzle) String() string {
 	return buffer.String()
 }
 
-func printInts(ints [81]int) string {
+func printInts(ints Grid) string {
 	var buffer bytes.Buffer
 	for i, value := range ints {
 		if i != 0 && i%9 == 0 {
