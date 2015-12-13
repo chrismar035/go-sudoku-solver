@@ -20,12 +20,17 @@ func newSquare(value int) square {
 }
 
 func (square *square) checkValues(indices [8]int, working working) {
+	if square.Value != 0 {
+		return
+	}
+
 	for _, index := range indices {
 		neighbor := working[index]
 		if neighbor.Value != 0 {
 			square.Candidates[neighbor.Value-1] = false
 		}
 	}
+	square.tryToSetValueFromCandidates()
 }
 
 func (square *square) tryToSetValueFromCandidates() {

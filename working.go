@@ -12,17 +12,9 @@ func processSquare(i int, working working) working {
 	square := working[i]
 
 	square.checkValues(grid.IndicesForRow(i), working)
-	square.tryToSetValueFromCandidates()
+	square.checkValues(grid.IndicesForColumn(i), working)
+	square.checkValues(grid.IndicesForSub(i), working)
 
-	if square.Value == 0 {
-		square.checkValues(grid.IndicesForColumn(i), working)
-		square.tryToSetValueFromCandidates()
-	}
-
-	if square.Value == 0 {
-		square.checkValues(grid.IndicesForSub(i), working)
-		square.tryToSetValueFromCandidates()
-	}
 
 	if working[i].Value != square.Value {
 		working[i] = square
