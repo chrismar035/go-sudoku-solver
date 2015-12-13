@@ -1,16 +1,20 @@
-package backtracker
+package solver
 
-import "github.com/chrismar035/solver/grid"
+import (
+	"github.com/chrismar035/solver/grid"
+)
 
-type square struct {
+type backtrackSquare struct {
 	value   int
 	initial bool
 }
 
-func Solve(given [81]int) [81]int {
-	var puzzle [81]square
+type backtrackingSolver struct{}
+
+func (b backtrackingSolver) Solve(given Grid) Grid {
+	var puzzle [81]backtrackSquare
 	for i, value := range given {
-		puzzle[i] = square{value: value, initial: value != 0}
+		puzzle[i] = backtrackSquare{value: value, initial: value != 0}
 	}
 
 	forward := true
@@ -53,7 +57,7 @@ func Solve(given [81]int) [81]int {
 	return ended
 }
 
-func checkValues(indices [8]int, current int, puzzle [81]square) bool {
+func checkValues(indices [8]int, current int, puzzle [81]backtrackSquare) bool {
 	for _, index := range indices {
 		if puzzle[index].value == current {
 			return false
