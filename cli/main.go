@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/chrismar035/solver"
-	"github.com/chrismar035/solver/backtracker"
 )
 
 func main() {
@@ -25,25 +24,17 @@ func main() {
 			fmt.Println("Puzzle improperly sized on line", line, err)
 		}
 
-		var puzzle [81]int
+		var grid solver.Grid
 		for i, char := range strings.Split(line, "") {
-			puzzle[i], err = strconv.Atoi(char)
+			grid[i], err = strconv.Atoi(char)
 			if err != nil {
 				fmt.Println("Invalid puzzle line", lineNumber, "char", i)
 			}
 		}
 
-		finished := solver.Puzzle{Initial: puzzle, Solution: backtracker.Solve(puzzle)}
-		fmt.Println(finished)
-		finished = solver.NewPuzzle(puzzle)
-		fmt.Println(finished)
+		puzzle := solver.Puzzle{Initial: grid}
+		solver := solver.NewSolver()
+		puzzle.Solution = solver.Solve(grid)
+		fmt.Println(puzzle)
 	}
-
-	// var candidate [81]int
-	// for i, _ := range candidate {
-	// 	candidate[i] = rand.Intn(10)
-	// }
-	// finished := solver.NewPuzzle(candidate)
-	// fmt.Println(finished)
-	// fmt.Println(finished.Solved())
 }
