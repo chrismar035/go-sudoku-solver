@@ -6,8 +6,8 @@ import (
 )
 
 type Puzzle struct {
-	Initial  Grid
-	Solution Grid
+	Initial  Grid `json:initial`
+	Solution Grid `json:solution`
 }
 
 func (p Puzzle) IsSolved() bool {
