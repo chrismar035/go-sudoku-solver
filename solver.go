@@ -23,3 +23,7 @@ func NewBacktrackingSolver() Solver {
 func NewLogicalSolver() Solver {
 	return logicalSolver{}
 }
+
+func NewRandBacktrackingSolver() Solver {
+	return randBacktrackingSolver{}
+}
