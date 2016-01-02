@@ -1,11 +1,67 @@
 # Sudoku Solver
 
-This project aims to "discover" all of the possible sudoku puzzles possible. It
-starts by implementing a sudoku solver using a non-backtracking, constraint
-driven algorithm. After the solver can solve even extremely difficult puzzles,
-a puzzle generator can be written; possibly using
-[go-fuzz](https://github.com/dvyukov/go-fuzz) to generate random, but valid,
-puzzles.
+This generates and solved Sudoku puzzles with the goal to "discover" all 
+possible puzzles and solutions. Sudoke Solver employes different algorithms
+to generate and solve puzzles as described below.
+
+## Solvers
+
+Sudoku Solver has two classes of solvers: single and multi-solvers. Single
+solvers will find a single solution for a puzzle while multi-solvers will
+find multiple solutions for a single problem. The strategy of the mult-solver
+will determine if it can find all solutions to a puzzle or not.
+
+## Single Solvers
+
+### Backtracking
+
+This is the most naive and simplest solver. It will try every possible 
+combination of values for unknown squares in order until a solution is found.
+This solver is also the default solver.
+
+```
+solver := solver.NewSolver()
+solution := solver.Solve(grid)
+
+// or
+solver := solver.NewBacktrackingSolver()
+solution := solver.Solve(grid)
+```
+
+### Logical
+
+The logical solver attempts to use only logic rules and cancellation to solve
+puzzles. In its current state, it can only solve very easy puzzles.
+
+```
+solver := solver.NewLogicalSolver()
+solution := solver.Solve(grid)
+```
+
+### Random backtracking
+
+The random backtracking solver is similar to the backtracking solver except that
+it will try values for each unknown square in random (not numerical) order. The
+digits 1-9 are shuffled for each square before the solver begins and as the
+solver progresses that order of digits is used.
+
+```
+solver := solver.NewRandBacktrackingSolver()
+solution := solver.Solve(grid)
+```
+
+## Multi-solvers
+
+### Backtracking
+
+The multi-backtracking solver uses the same underlying algorithm as the single
+backtracking solver except that it does not stop at the first solution. Instead,
+it continues and finally returns a slice of solutions.
+
+```
+solver := solver.NewMultiBacktrackingSolver()
+solutions := solver.Solve(grid)
+```
 
 ## CLI Usage
 
