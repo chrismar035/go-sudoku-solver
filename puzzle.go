@@ -22,15 +22,15 @@ func (p Puzzle) IsSolved() bool {
 func (p Puzzle) String() string {
 	var buffer bytes.Buffer
 	buffer.WriteString("Puzzle\n")
-	buffer.WriteString(printInts(p.Initial))
+	buffer.WriteString(p.Initial.String())
 	buffer.WriteString("\n\nSolution\n")
-	buffer.WriteString(printInts(p.Solution))
+	buffer.WriteString(p.Solution.String())
 	return buffer.String()
 }
 
-func printInts(ints Grid) string {
+func (g Grid) String() string {
 	var buffer bytes.Buffer
-	for i, value := range ints {
+	for i, value := range g {
 		if i != 0 && i%9 == 0 {
 			buffer.WriteString("\n")
 		} else if i != 0 && i%3 == 0 {
