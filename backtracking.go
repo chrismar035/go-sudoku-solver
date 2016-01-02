@@ -1,7 +1,7 @@
 package solver
 
 import (
-	"github.com/chrismar035/solver/grid"
+	"github.com/chrismar035/sudoku-solver/grid"
 )
 
 type backtrackSquare struct {

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/chrismar035/solver"
+	"github.com/chrismar035/sudoku-solver"
 )
 
 func main() {
