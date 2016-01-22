@@ -33,8 +33,19 @@ func main() {
 		}
 
 		puzzle := solver.Puzzle{Initial: grid}
-		solver := solver.NewSolver()
-		puzzle.Solution = solver.Solve(grid)
+		multiSolver := solver.NewMultiBacktrackingSolver()
+		solutions := multiSolver.Solve(grid)
+
+		fmt.Println("Found", len(solutions), "solution(s)")
+		fmt.Print("Initial\n", puzzle.Initial, "\n\nSolution(s)\n")
+		for _, g := range solutions {
+			fmt.Print(g)
+			fmt.Println("\n-----------\n")
+		}
+
+		singleSolver := solver.NewSolver()
+		puzzle.Solution = singleSolver.Solve(grid)
 		fmt.Println(puzzle)
+
 	}
 }
