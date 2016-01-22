@@ -1,5 +1,7 @@
 package solver
 
+import "fmt"
+
 type square struct {
 	Candidates [9]bool
 	Value      int
@@ -31,6 +33,36 @@ func (square *square) checkValues(indices [8]int, working working) {
 		}
 	}
 	square.tryToSetValueFromCandidates()
+}
+
+func (square *square) checkOtherCandidate(indices [8]int, working working) {
+	if square.Value != 0 {
+		return
+	}
+
+	fmt.Println(square)
+	for i, possible := range square.Candidates {
+		if !possible {
+			continue
+		}
+		fmt.Println("Checking", i+1)
+		found := false
+		for _, index := range indices {
+			neighbor := working[index]
+			if neighbor.Value != 0 {
+				continue
+			}
+			fmt.Println("Compare", index, neighbor.Candidates[i], neighbor)
+			if neighbor.Candidates[i] {
+				found = true
+				break
+			}
+		}
+		if !found {
+			square.Value = i + 1
+			return
+		}
+	}
 }
 
 func (square *square) tryToSetValueFromCandidates() {
