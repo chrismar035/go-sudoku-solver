@@ -1,5 +1,7 @@
 # Sudoku Solver
 
+[ ![Codeship Status for chrismar035/sudoku-solver](https://codeship.com/projects/91a82d50-a3b1-0133-d1b4-3641d785a31d/status?branch=master)](https://codeship.com/projects/129313)
+
 This generates and solved Sudoku puzzles with the goal to "discover" all 
 possible puzzles and solutions. Sudoke Solver employes different algorithms
 to generate and solve puzzles as described below.
