@@ -50,3 +50,11 @@ func NewRandBacktrackingSolver() Solver {
 func NewMultiBacktrackingSolver() MultiSolver {
 	return multiBacktrackingSolver{}
 }
+
+// NewSingleBacktrackingSolver creates a new Sudoku solver which only returns a
+// solution when the puzzle has a single solution. If multiple solutions are
+// found, a "Multiple solutions found" error is returned. This is useful for
+// validating a puzzle only has one solution.
+func NewSingleBacktrackingSolver() Solver {
+	return singleBacktrackingSolver{}
+}
