@@ -1,6 +1,8 @@
 package solver
 
 import (
+	"errors"
+
 	"github.com/chrismar035/sudoku-solver/grid"
 )
 
@@ -44,10 +46,12 @@ func (b backtrackingSolver) Solve(given Grid) (Grid, error) {
 			}
 			if ok {
 				i++
-			} else {
 			}
 		}
-		// time.Sleep(time.Second)
+
+		if i < 0 {
+			return Grid{}, errors.New("Unsolvable puzzle")
+		}
 	}
 
 	var ended [81]int

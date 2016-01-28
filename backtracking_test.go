@@ -1,6 +1,9 @@
 package solver
 
-import "testing"
+import (
+	"errors"
+	"testing"
+)
 
 func TestBacktrackingSolver(t *testing.T) {
 	puzzle := Grid{
@@ -30,5 +33,26 @@ func TestBacktrackingSolver(t *testing.T) {
 	actual, _ := backtracker.Solve(puzzle)
 	if actual != expected {
 		t.Errorf("backtracking.Solve(%d) == %v; want %v", puzzle, actual, expected)
+	}
+}
+
+func TestUnsolveableBacktrackingSolver(t *testing.T) {
+	puzzle := Grid{
+		1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1, 1, 1, 1, 1, 1, 9,
+		1, 2, 3, 4, 5, 6, 7, 8, 0,
+	}
+
+	backtracker := NewBacktrackingSolver()
+	_, err := backtracker.Solve(puzzle)
+	expected := errors.New("Unsolvable puzzle")
+	if err != nil && err.Error() != expected.Error() {
+		t.Errorf("backtracking.Solve(%d) == %v; want %v", puzzle, err, expected)
 	}
 }
