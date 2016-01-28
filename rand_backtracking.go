@@ -24,7 +24,7 @@ func (s randBacktrackSquare) nextCandidate() int {
 
 type randBacktrackingSolver struct{}
 
-func (b randBacktrackingSolver) Solve(given Grid) Grid {
+func (b randBacktrackingSolver) Solve(given Grid) (Grid, error) {
 	var puzzle [81]randBacktrackSquare
 	for i, value := range given {
 		puzzle[i] = randBacktrackSquare{
@@ -72,7 +72,7 @@ func (b randBacktrackingSolver) Solve(given Grid) Grid {
 	for i, square := range puzzle {
 		ended[i] = square.value
 	}
-	return ended
+	return ended, nil
 }
 
 func mixedValues() []int {

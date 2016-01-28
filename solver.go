@@ -6,13 +6,13 @@ type Grid [81]int
 
 // Solver defines the interface for a Sudoku solver
 type Solver interface {
-	Solve(g Grid) Grid
+	Solve(g Grid) (Grid, error)
 }
 
 // MultiSolver defines the interface for a Sudoku solver
 // that finds many solutioons to a puzzle
 type MultiSolver interface {
-	Solve(g Grid) []Grid
+	Solve(g Grid) ([]Grid, error)
 }
 
 // NewSolver creates a new Sudoku solver with teh default solving strategy.

@@ -27,7 +27,7 @@ func TestBacktrackingSolver(t *testing.T) {
 	}
 
 	backtracker := NewBacktrackingSolver()
-	actual := backtracker.Solve(puzzle)
+	actual, _ := backtracker.Solve(puzzle)
 	if actual != expected {
 		t.Errorf("backtracking.Solve(%d) == %v; want %v", puzzle, actual, expected)
 	}

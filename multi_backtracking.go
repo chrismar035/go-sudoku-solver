@@ -4,7 +4,7 @@ import "github.com/chrismar035/sudoku-solver/grid"
 
 type multiBacktrackingSolver struct{}
 
-func (b multiBacktrackingSolver) Solve(given Grid) []Grid {
+func (b multiBacktrackingSolver) Solve(given Grid) ([]Grid, error) {
 	var puzzle [81]backtrackSquare
 	for i, value := range given {
 		puzzle[i] = backtrackSquare{value: value, initial: value != 0}
@@ -59,5 +59,5 @@ func (b multiBacktrackingSolver) Solve(given Grid) []Grid {
 		}
 	}
 
-	return solutions
+	return solutions, nil
 }
