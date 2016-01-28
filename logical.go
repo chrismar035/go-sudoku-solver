@@ -7,7 +7,7 @@ type logicalSquare struct {
 
 type logicalSolver struct{}
 
-func (b logicalSolver) Solve(given Grid) Grid {
+func (b logicalSolver) Solve(given Grid) (Grid, error) {
 	working := workingFromGrid(given)
 	blankCount := working.blankCount()
 
@@ -25,5 +25,5 @@ func (b logicalSolver) Solve(given Grid) Grid {
 		}
 	}
 
-	return working.ToGrid()
+	return working.ToGrid(), nil
 }

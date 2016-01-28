@@ -1,10 +1,14 @@
 package solver
 
-import "github.com/chrismar035/sudoku-solver/grid"
+import (
+	"errors"
 
-type multiBacktrackingSolver struct{}
+	"github.com/chrismar035/sudoku-solver/grid"
+)
 
-func (b multiBacktrackingSolver) Solve(given Grid) ([]Grid, error) {
+type singleBacktrackingSolver struct{}
+
+func (b singleBacktrackingSolver) Solve(given Grid) (Grid, error) {
 	var puzzle [81]backtrackSquare
 	for i, value := range given {
 		puzzle[i] = backtrackSquare{value: value, initial: value != 0}
@@ -49,15 +53,17 @@ func (b multiBacktrackingSolver) Solve(given Grid) ([]Grid, error) {
 				ended[i] = square.value
 			}
 			solutions = append(solutions, ended)
+			if len(solutions) > 1 {
+				return Grid{}, errors.New("Multiple solutions found")
+			}
 
 			forward = false
 			i--
 		}
-		if i <= 0 {
-			// Found all the solutions
+		if i < 0 {
 			break
 		}
 	}
 
-	return solutions, nil
+	return solutions[0], nil
 }
